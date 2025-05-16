@@ -401,7 +401,7 @@ const Board: React.FC<BoardProps> = ({ searchKey }) => {
   }, [lists, searchKey]);
 
   return (
-    <div className="flex-1 overflow-x-auto px-6 pb-6 mr-5">
+    <div className="flex-1 overflow-x-auto px-6 pb-6 mr-5 green-background">
       <DragDropContext onDragEnd={handleDragEnd}>
         <Droppable direction="horizontal" droppableId="board" type="list">
           {(provided) => (

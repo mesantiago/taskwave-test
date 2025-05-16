@@ -67,3 +67,7 @@ html {
   scrollbar-color: black transparent; /* Thumb and track colors */
   scrollbar-width: thin; /* Makes the scrollbar thinner */
 }
+
+.green-background {
+  background-color: #00b144;
+}
