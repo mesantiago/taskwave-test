@@ -385,7 +385,19 @@ const Board: React.FC<BoardProps> = ({ searchKey }) => {
   }, [lists]);
 
   const filteredLists = React.useMemo(() => {
-    return lists;
+    const listClone: ListType[] = JSON.parse(JSON.stringify(lists));
+    const lowerSearchKey = searchKey?.toLowerCase();
+    return listClone.map(list => {
+      list.cards = list.cards.filter(card => card.title?.toLowerCase()?.includes(lowerSearchKey) ||
+        card.description?.toLowerCase()?.includes(lowerSearchKey) ||
+        (card.dateAdded && new Intl.DateTimeFormat('en-US', {
+          day: 'numeric',
+          month: 'short',
+          year: 'numeric',
+        }).format(new Date(card.dateAdded))?.toLowerCase()?.includes(lowerSearchKey))
+      );
+      return list;
+    });
   }, [lists, searchKey]);
 
   return (
