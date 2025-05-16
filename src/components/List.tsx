@@ -26,6 +26,7 @@ const List: React.FC<ListProps> = ({
   const [listTitle, setListTitle] = useState(list.title);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [sortByTitle, setSortByTitle] = useState('');
+  const [sortByDate, setSortByDate] = useState('');
 
   const handleAddCard = () => {
     if (newCardTitle.trim()) {
@@ -95,13 +96,23 @@ const List: React.FC<ListProps> = ({
     setSortByTitle(sortByTitle === 'desc' ? 'asc' : 'desc');
   };
 
+  const handleSortByDate = () => {
+    setSortByTitle('');
+    setSortByDate(sortByDate === 'desc' ? 'asc' : 'desc');
+  };
+
   const sortedCards = React.useMemo(() => {
     let cards = list.cards;
     if (sortByTitle) {
       cards = cards.sort((a, b) => (sortByTitle === 'asc' ? a.title > b.title : b.title > a.title)  ? 1 : -1);
     }
+    if (sortByDate) {
+      cards = cards.sort((a, b) => {
+        return sortByDate === 'asc' ? (new Date(a.dateAdded).getTime() - new Date(b.dateAdded).getTime()) : (new Date(b.dateAdded).getTime() - new Date(a.dateAdded).getTime())
+      });
+    }
     return cards;
-  }, [list.cards, sortByTitle]);
+  }, [list.cards, sortByTitle, sortByDate]);
 
   return (
     <div className="w-72 flex-shrink-0 max-h-full flex flex-col mr-4 rounded overflow-hidden shadow-md">
@@ -150,7 +161,9 @@ const List: React.FC<ListProps> = ({
                 >
                   Sort by title (Ascending and Descending)
                 </li>
-                <li className="py-2 px-4 rounded cursor-pointer hover:bg-[#8d80d6]">
+                <li className="py-2 px-4 rounded cursor-pointer hover:bg-[#8d80d6]"
+                  onClick={handleSortByDate}
+                >
                   Sort by date (Ascending and Descending)
                 </li>
               </ul>
