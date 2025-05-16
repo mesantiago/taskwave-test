@@ -11,7 +11,7 @@ interface ListProps {
   onCardClick: (card: CardType) => void;
   onEditListTitle: (listId: string, newTitle: string) => void;
   onRemoveList: (listId: string) => void;
-  onSortByTitle: (listId: string, updatedCards: CardType[]) => void;
+  onSort: (listId: string, updatedCards: CardType[]) => void;
 }
 
 const List: React.FC<ListProps> = ({
@@ -19,6 +19,7 @@ const List: React.FC<ListProps> = ({
   onAddCard,
   onCardClick,
   onEditListTitle,
+  onSort
 }) => {
   const [isAddingCard, setIsAddingCard] = useState(false);
   const [newCardTitle, setNewCardTitle] = useState('');
@@ -92,27 +93,30 @@ const List: React.FC<ListProps> = ({
   };
 
   const handleSortByTitle = () => {
+    const currentSort = sortByTitle === 'asc' ? 'desc' : 'asc';
+    setSortByTitle(currentSort);
     setSortByDate('');
-    setSortByTitle(sortByTitle === 'desc' ? 'asc' : 'desc');
+    onSort(
+      list.id,
+      list.cards.sort((a, b) => currentSort === 'asc' ?
+        a.title.localeCompare(b.title) :
+        b.title.localeCompare(a.title)
+      )
+    );
   };
 
   const handleSortByDate = () => {
+    const currentSort = sortByDate === 'desc' ? 'asc' : 'desc';
+    setSortByDate(currentSort);
     setSortByTitle('');
-    setSortByDate(sortByDate === 'desc' ? 'asc' : 'desc');
+    onSort(
+      list.id,
+      list.cards.sort((a, b) => currentSort === 'asc' ?
+        +new Date(a.dateAdded) - +new Date(b.dateAdded) :
+        +new Date(b.dateAdded) - +new Date(a.dateAdded)
+      )
+    );
   };
-
-  const sortedCards = React.useMemo(() => {
-    let cards = list.cards;
-    if (sortByTitle) {
-      cards = cards.sort((a, b) => (sortByTitle === 'asc' ? a.title > b.title : b.title > a.title)  ? 1 : -1);
-    }
-    if (sortByDate) {
-      cards = cards.sort((a, b) => {
-        return sortByDate === 'asc' ? (new Date(a.dateAdded).getTime() - new Date(b.dateAdded).getTime()) : (new Date(b.dateAdded).getTime() - new Date(a.dateAdded).getTime())
-      });
-    }
-    return cards;
-  }, [list.cards, sortByTitle, sortByDate]);
 
   return (
     <div className="w-72 flex-shrink-0 max-h-full flex flex-col mr-4 rounded overflow-hidden shadow-md">
@@ -204,7 +208,7 @@ const List: React.FC<ListProps> = ({
             ref={provided.innerRef}
             {...provided.droppableProps}
           >
-            {sortedCards.map((card, index) => (
+            {list.cards.map((card, index) => (
               <Card
                 card={card}
                 index={index}
