@@ -25,6 +25,7 @@ const List: React.FC<ListProps> = ({
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [listTitle, setListTitle] = useState(list.title);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [sortByTitle, setSortByTitle] = useState('');
 
   const handleAddCard = () => {
     if (newCardTitle.trim()) {
@@ -90,8 +91,17 @@ const List: React.FC<ListProps> = ({
   };
 
   const handleSortByTitle = () => {
-    throw new Error('Function not implemented.');
+    setSortByDate('');
+    setSortByTitle(sortByTitle === 'desc' ? 'asc' : 'desc');
   };
+
+  const sortedCards = React.useMemo(() => {
+    let cards = list.cards;
+    if (sortByTitle) {
+      cards = cards.sort((a, b) => (sortByTitle === 'asc' ? a.title > b.title : b.title > a.title)  ? 1 : -1);
+    }
+    return cards;
+  }, [list.cards, sortByTitle]);
 
   return (
     <div className="w-72 flex-shrink-0 max-h-full flex flex-col mr-4 rounded overflow-hidden shadow-md">
@@ -181,7 +191,7 @@ const List: React.FC<ListProps> = ({
             ref={provided.innerRef}
             {...provided.droppableProps}
           >
-            {list.cards.map((card, index) => (
+            {sortedCards.map((card, index) => (
               <Card
                 card={card}
                 index={index}
