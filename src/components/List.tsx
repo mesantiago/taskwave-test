@@ -19,6 +19,7 @@ const List: React.FC<ListProps> = ({
   onAddCard,
   onCardClick,
   onEditListTitle,
+  onRemoveList,
   onSort
 }) => {
   const [isAddingCard, setIsAddingCard] = useState(false);
@@ -89,7 +90,7 @@ const List: React.FC<ListProps> = ({
   };
 
   const handleRemoveList = () => {
-    throw new Error('Function not implemented.');
+    onRemoveList(list.id);
   };
 
   const handleSortByTitle = () => {
