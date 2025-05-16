@@ -7,6 +7,12 @@ interface MainProps {
 }
 
 const Main: React.FC<MainProps> = ({ searchKey }) => {
+  const dateNow = new Intl.DateTimeFormat('en-US', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+  }).format(new Date());
+
   return (
     <main
       className="flex-1 overflow-hidden shadow-md"
@@ -17,7 +23,7 @@ const Main: React.FC<MainProps> = ({ searchKey }) => {
     >
       <div className="py-4 px-6">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-semibold">Sprint 127</h2>
+          <h2 className="text-xl font-semibold">Mark Benedict Santiago - {dateNow}</h2>
           <button className="flex items-center rounded-md px-3 py-1.5 text-sm transition-colors">
             <span className="mr-1">Customize</span>
             <svg
